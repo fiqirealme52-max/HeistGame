@@ -44,6 +44,7 @@ function settle(game, seconds) {
 }
 
 export function stageShot(name, game) {
+  game.shotName = name;
   if (name === 'cover') {
     loadWing(game, 2);
     game.screen = SCREEN_PLAY;
@@ -54,13 +55,13 @@ export function stageShot(name, game) {
     game.chances = 3;
     game.seen = false; // Ghost still intact
     game.player.x = 640;
-    game.player.y = 480;
+    game.player.y = 360;
     game.player.dir = -Math.PI / 2; // walking up toward the Mask
     game.player.sneaking = false;
     // Max 3 guards + 2 cameras clearly visible in the cover frame.
     placeGuard(game, 2, 430, 300, 0.6, 'patrol', 20); // left of the Mask
     placeGuard(game, 3, 850, 540, -2.2, 'patrol', 10); // lower right
-    placeGuard(game, 4, 640, 430, Math.PI / 2, 'suspicion', 55); // centre, sweeping down
+    placeGuard(game, 4, 720, 440, Math.PI / 2, 'suspicion', 55); // off-centre, sweeping down
     // The other three guards stand at the bottom edge facing OUT — their
     // cones frame the shot from below instead of competing with the centre.
     placeGuard(game, 0, 120, 682, Math.PI / 2, 'patrol', 0);
@@ -85,23 +86,26 @@ export function stageShot(name, game) {
     game.chances = 3;
     game.seen = false;
     game.player.x = 640;
-    game.player.y = 180; // in the service corridor, top route
-    game.player.dir = Math.PI; // heading left down the corridor
+    game.player.y = 300; // at the vent-gap junction: grand hall below, corridor above
+    game.player.dir = -Math.PI / 2; // facing up toward the service corridor
     game.player.sneaking = true;
-    // Smoke out: cones hidden, thief blind too.
+    // Smoke out: cones hidden, thief blind too — smaller now, centred off the
+    // thief so the protagonist reads at the bubble's edge, not buried in it.
     game.smokeActive = true;
     game.smokeLeft = 3.2;
-    game.smokeX = 640;
-    game.smokeY = 180;
-    game.smokeRadius = 96;
+    game.smokeX = 705;
+    game.smokeY = 315;
+    game.smokeRadius = 64;
     // A coin mid-flight toward the far end; the corridor guard turns to it.
-    game.thrownCoin = { x: 900, y: 180, left: 0.6, startX: 640, startY: 180 };
-    placeGuard(game, 2, 760, 180, 0, GUARD_INVESTIGATE, 45);
+    game.thrownCoin = { x: 900, y: 180, left: 0.6, startX: 640, startY: 300 };
+    placeGuard(game, 2, 860, 180, Math.PI, GUARD_INVESTIGATE, 45); // service corridor
     game.guards[2].targetX = 900;
     game.guards[2].targetY = 180;
-    placeGuard(game, 0, 420, 420, 1.2, 'patrol', 15);
+    placeGuard(game, 0, 400, 470, 0.9, 'patrol', 15); // grand hall, lower left
     placeGuard(game, 1, 900, 500, -1.4, 'patrol', 5);
     placeGuard(game, 3, 1080, 560, 2.6, 'patrol', 0);
+    game.message = 'TWO ROUTES: grand hall or service corridor — the guard turns to your coin.';
+    game.messageLeft = 99;
     placeCamera(game, 0, 1.4);
     placeCamera(game, 1, 1.0);
     placeCamera(game, 2, 2.0);
